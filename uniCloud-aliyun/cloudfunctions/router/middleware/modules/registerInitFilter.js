@@ -26,7 +26,6 @@ module.exports = [{
 			let initData = {
 				// 这里可以加你想要初始化的其他字段，如 status字段初始化为 0
 				status: 0, // 用户状态：0 正常 1 禁用 2 审核中 3 审核拒绝
-
 			};
 			// 如果开启了删除dcloud_appid功能，则初始化数据带上 dcloud_appid: _.remove()
 			if (uniIdConfig.removeDcloudAppid) {

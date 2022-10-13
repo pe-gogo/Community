@@ -2,7 +2,8 @@
 var vk; // 全局vk实例
 // 涉及的表名
 const dbName = {
-	cate:"opendb-mall-categories"
+	cate:"opendb-mall-categories",
+	goods:"opendb-mall-goods"
 };
 
 var db = uniCloud.database(); // 全局数据库引用
@@ -57,13 +58,41 @@ var cloudObject = {
 	},
 	/**
 	 * 模板函数
-	 * @url client/pub.cate.test 前端调用的url参数地址
+	 * @url client/pub.cate.getGoodsAndCates 前端调用的url参数地址
 	 */
-	test: async function(data) {
+	getGoodsAndCates: async function(data) {
 		let res = { code: 0, msg: '' };
 		let { uid } = this.getClientInfo(); // 获取客户端信息
 		// 业务逻辑开始-----------------------------------------------------------
-
+		res = await vk.baseDao.selects({
+		  dbName: dbName.cate,// 主表名
+		  getCount: false, // 是否需要同时查询满足条件的记录总数量，默认false
+		  getMain:false,// 是否只返回rows数据，默认false
+		  pageIndex: 1, // 查询第几页
+		  pageSize: -1, // 每页多少条数据
+		  // 主表where条件
+		  whereJson: {
+		
+		  },
+		  // 主表排序规则
+		  sortArr: [{ "name": "_id","type": "desc" }],
+		  // 副表列表
+		  foreignDB: [
+		    {
+		      dbName: dbName.goods, // 副表名
+		      localKey:"cate_id", // 主表外键字段名
+		      foreignKey: "cate_id", // 副表外键字段名
+		      as: "goodsList",
+		      limit: 10, // 当limit = 1时，以对象形式返回，否则以数组形式返回
+		      // 副表where条件
+		      whereJson: {},
+		      // 副表字段显示规则
+		      fieldJson: {},
+		      // 副表排序规则
+		      sortArr: [{ "goods_id": "name","type": "desc" }],
+		    }
+		  ],
+		});
 
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;

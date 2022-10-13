@@ -1,27 +1,21 @@
 <template>
 	<view>
 		<!-- 状态栏 -->
-		<view v-if="showHeader" class="status" :style="{ position: headerPosition,top:statusTop,opacity: afterHeaderOpacity}"></view>
+		
 		<!-- 顶部导航栏 -->
-		<view v-if="showHeader" class="header" :style="{ position: headerPosition,top:headerTop,opacity: afterHeaderOpacity }">
+		<view class="header" :style="{ position: headerPosition,top:headerTop,opacity: afterHeaderOpacity }">
 			<!-- 定位城市 -->
-			<view class="addr">
-				<view class="icon location"></view>
-				{{ city }}
-			</view>
+			<!-- <view class="addr" @tap="this.$refs.mpvueCityPicker.show()">
+				<view class="icon location" ></view>
+				{{"阳光新城"}}
+			</view> -->
 			<!-- 搜索框 -->
-			<view class="input-box">
+			<view class="input-box" >
 				<input
-					placeholder="默认关键字"
+					placeholder="输入关键字"
 					placeholder-style="color:#c0c0c0;"
-					@tap="toSearch()"
 				/>
-				<view class="icon search"></view>
-			</view>
-			<!-- 右侧图标按钮 -->
-			<view class="icon-btn">
-				<view class="icon yuyin-home"></view>
-				<view class="icon tongzhi" @tap="toMsg"></view>
+				<u-icon name="search"></u-icon>
 			</view>
 		</view>
 		<!-- 占位 -->
@@ -68,7 +62,7 @@
 					@tap="toPromotion(row)"
 					:key="index"
 				>
-					<view class="top">
+					<view class="top" >
 						<view class="title">{{ row.title }}</view>
 						<view class="countdown" v-if="row.countdown">
 							<view>{{ row.countdown.h }}</view>
@@ -89,7 +83,7 @@
 		<!-- 商品列表 -->
 		<view class="goods-list">
 			<view class="title">
-				<image src="/static/img/hua.png"></image>
+				<image src="/static/img/hua.png" ></image>
 				猜你喜欢
 				<image src="/static/img/hua.png"></image>
 			</view>
@@ -117,6 +111,7 @@
 var ttt = 0;
 //高德SDK
 import amap from '@/common/SDK/amap-wx.js';
+import mpvueCityPicker from '@/components/mpvue-citypicker/mpvueCityPicker.vue'
 export default {
 	data() {
 		return {
@@ -127,6 +122,7 @@ export default {
 			statusTop:null,
 			nVueTitle:null,
 			city: '北京',
+			location:{},
 			currentSwiper: 0,
 			// 轮播图片
 			swiperList: [
@@ -162,22 +158,9 @@ export default {
 			this.loadingText = '到底了';
 			return false;
 		}
-		// 演示,随机加入商品,生成环境请替换为ajax请求
-		// let end_goods_id = this.productList[len - 1].goods_id;
-		// for (let i = 1; i <= 10; i++) {
-		// 	let goods_id = end_goods_id + i;
-		// 	let p = {
-		// 		goods_id: goods_id,
-		// 		img:
-		// 			'/static/img/goods/p' + (goods_id % 10 == 0 ? 10 : goods_id % 10) + '.jpg',
-		// 		name: '商品名称商品名称商品名称商品名称商品名称',
-		// 		price: '￥168',
-		// 		slogan: '1235人付款'
-		// 	};
-		// 	this.productList.push(p);
-		// }
 	},
 	onLoad() {
+		
 		this.init()
 		// #ifdef APP-PLUS
 		this.nVueTitle = uni.getSubNVueById('homeTitleNvue');
@@ -210,27 +193,50 @@ export default {
 	},
 	methods: {
 		init(){
+				vk.callFunction({
+					url: 'client/pub.cate.getList',
+					title: '请求中...',
+					data: {
+						
+					},
+					success: (data) => {					
+						this.categoryList = data.info
+						vk.setStorageSync('categoryList',this.categoryList);
+					}
+				});
+				vk.callFunction({
+					url: 'client/pub.goods.getList',
+					title: '请求中...',
+					data: {	
+					},
+					success: (data) => {
+						this.productList = data.data;
+						vk.setStorageSync('productList',this.productList);
+					}
+				});
+		},
+		//获取参数
+		getGoodAndCate(){
 			vk.callFunction({
-				url: 'client/pub.cate.getList',
+				url: 'client/pub.cate.getGoodsAndCates',
 				title: '请求中...',
 				data: {
 					
 				},
 				success: (data) => {
-					this.categoryList = data.info
+					console.log(data)
 				}
 			});
-			vk.callFunction({
-				url: 'client/pub.goods.getList',
-				title: '请求中...',
-				data: {
-					
-				},
-				success: (data) => {
-					this.productList = data.data;
-					console.log(this.productList)
-				}
-			});
+		},
+		//获取用户位置
+		getLocation(){
+			wx.getFuzzyLocation({
+			 type: 'wgs84',
+			 success (res) {
+			   this.location = res
+			   console.log(this.location)
+			 }
+			})
 		},
 		//加载Promotion 并设定倒计时,,实际应用中应该是ajax加载此数据。
 		loadPromotion() {
@@ -337,10 +343,10 @@ export default {
 		},
 		//分类跳转
 		toCategory(e) {
-			//uni.showToast({title: e.name,icon:"none"});
+			// uni.showToast({title: e.name,icon:"none"});
 			uni.setStorageSync('catName',e.name);
 			uni.navigateTo({
-				url: '../../goods/goods-list/goods-list?cid='+e.id+'&name='+e.name
+				url: '../../goods/goods-list/goods-list?cid='+e.cate_id+'&name='+e.name
 			});
 		},
 		//推荐商品跳转
@@ -435,17 +441,6 @@ page{position: relative;background-color: #fff;}
 		position: relative;
 		display: flex;
 		align-items: center;
-		.icon {
-			display: flex;
-			align-items: center;
-			position: absolute;
-			top: 0;
-			right: 0;
-			width: 60upx;
-			height: 60upx;
-			font-size: 34upx;
-			color: #c0c0c0;
-		}
 		input {
 			padding-left: 28upx;
 			height: 28upx;

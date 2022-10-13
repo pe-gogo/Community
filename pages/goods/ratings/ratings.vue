@@ -134,7 +134,7 @@
 		},
 		//上拉加载，需要自己在page.json文件中配置"onReachBottomDistance"
 		onReachBottom() {
-			uni.showToast({ title: '触发上拉加载' });
+			
 		},
 		methods: {
 			loadRatings(index){

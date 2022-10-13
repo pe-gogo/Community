@@ -17,33 +17,6 @@
 			}
 		},
 		{
-			"path": "pages/tabBar/category/category",
-			"style": {
-				"navigationBarTextStyle":"black",
-				"app-plus": {
-					"titleNView": false ,//禁用原生导航栏
-					"bounce":"none"
-					
-				}
-			}
-		},
-		{
-			"path": "pages/tabBar/cart/cart",
-			"style": {
-				"enablePullDownRefresh": true,
-				"navigationBarTextStyle":"black",
-				"app-plus": {
-					"titleNView": false ,//禁用原生导航栏
-					"softinputNavBar":"none",
-					"subNVues":[{  
-						"id": "cartTitleNvue", // 唯一标识  
-						"path": "pages/tabBar/cart/subNvue/cartTitleNvue", // 页面路径  
-						"type":"navigationBar"
-					}]
-				}
-			}
-		},
-		{
 			"path": "pages/tabBar/user/user",
 			"style": {
 				"enablePullDownRefresh": true,
@@ -416,18 +389,6 @@
 				"iconPath": "static/img/tabBar/home.png",
 				"selectedIconPath": "static/img/tabBar/home-on.png",
 				"text": "首页"
-			},
-			{
-				"pagePath": "pages/tabBar/category/category",
-				"iconPath": "static/img/tabBar/category.png",
-				"selectedIconPath": "static/img/tabBar/category-on.png",
-				"text": "分类"
-			},
-			{
-				"pagePath": "pages/tabBar/cart/cart",
-				"iconPath": "static/img/tabBar/cart.png",
-				"selectedIconPath": "static/img/tabBar/cart-on.png",
-				"text": "购物车"
 			},
 			{
 				"pagePath": "pages/tabBar/user/user",

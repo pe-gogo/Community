@@ -6,17 +6,33 @@ var pubFun = {};
 /**
  * 公共函数写法示例
  * 调用示例：
- * pubFun.test();
+ * pubFun.getGoods();
  * 或
- * vk.myfn.test();
+ * vk.myfn.getGoods();
  */
-pubFun.test = function(path) {
-	 // 可通过 uniCloud.vk 来获取vk实例
-	let vk = uniCloud.vk;
-	// 逻辑
-	// ...
-	// 逻辑	
-	return "这是公共函数test的返回";
+pubFun.getSms= = function(path) {
+	let sendSmsRes = await vk.system.smsUtil.sendSms({
+		provider: "aliyun",
+		phone: "15200000001",
+		templateId: "SMS_202470413",
+		data: {
+		code: "1234"
+  }
+});
+	return ;
+}
+pubFun.go = function(path,data){
+	
+	vk.callFunction({
+		url: path,
+		title: '...',
+		data: {
+			...data
+		},
+		success: (data) => {
+			return data;
+		},
+	});
 }
 
 

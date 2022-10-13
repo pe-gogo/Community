@@ -63,8 +63,8 @@ module.exports = {
 				// 阿里云短信服务
 				"aliyun": {
 					"enable": false,                // 是否使用阿里云短信代替unicloud短信发送短信验证码
-					"accessKeyId": "",              // 短信密钥key
-					"accessKeySecret": "",          // 短信密钥secret
+					"accessKeyId": "adb23e87dd213c3795a1dcd00e6d58f1",              // 短信密钥key
+					"accessKeySecret": "393c1923de8213742a5f57f9dd1c644f",          // 短信密钥secret
 					"signName": "",                 // 默认签名
 					"templateCode": {
 						"verifyCode": ""              // 验证码短信模板 - 配合uni-id需要
